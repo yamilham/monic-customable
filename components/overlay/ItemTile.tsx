@@ -74,7 +74,7 @@ export function ItemTile({ item, isSelected, onSelect }: ItemTileProps) {
 
       {/* Selected checkmark */}
       {isSelected && (
-        <span className="shrink-0 w-4 h-4 rounded-full bg-amber flex items-center justify-center">
+        <span className="shrink-0 w-4 h-4 rounded-full bg-slate-950 flex items-center justify-center">
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden>
             <path
               d="M1.5 4L3.2 5.7L6.5 2.5"

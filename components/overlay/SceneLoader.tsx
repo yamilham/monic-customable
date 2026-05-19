@@ -29,15 +29,16 @@ export function SceneLoader() {
     >
       <div className="relative">
         <div className="w-16 h-16 rounded-2xl bg-ink flex items-center justify-center shadow-float">
-          <span className="font-display text-3xl text-amber leading-none">
-            M
+          <span className="font-display text-3xl text-white font-extrabold leading-none">
+            m
           </span>
         </div>
-        <div className="absolute inset-0 rounded-2xl border-2 border-amber/30 animate-spin [animation-duration:2s]" />
       </div>
 
       <div className="flex flex-col items-center gap-1">
-        <p className="font-display text-xl text-ink">Monis</p>
+        <p className="font-display text-xl font-extrabold text-slate-dark tracking-tighter">
+          monis
+        </p>
         <p className="font-body text-[11px] text-ink-muted tracking-widest uppercase">
           Loading workspace…
         </p>
@@ -47,7 +48,7 @@ export function SceneLoader() {
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="w-1.5 h-1.5 rounded-full bg-amber animate-bounce"
+            className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-bounce"
             style={{
               animationDelay: `${i * 0.15}s`,
               animationDuration: "0.8s",
