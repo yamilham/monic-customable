@@ -28,8 +28,6 @@ For the 3D scene, all objects are built from Three.js `BoxGeometry` and `Cylinde
 
 ## What I'd Improve With More Time
 
-**3D fidelity** — Replace `BoxGeometry` primitives with purpose-built GLTF models per item. Even low-poly hand-modelled assets would dramatically improve the configurator's perceived value. Add a subtle HDRI environment map for realistic reflections on desk surfaces and chair materials.
-
 **Accessory placement logic** — Currently accessories sit at a hardcoded world position. With more time, accessories would snap relative to the active desk's geometry — so a narrow standard desk positions items differently than a wide electrical desk.
 
 **Responsive & mobile** — The current layout is desktop-first with fixed pixel positions. A proper mobile layout would stack the category panel as a bottom sheet and shift the scene camera to a front-facing isometric angle.
