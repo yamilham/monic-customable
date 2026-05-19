@@ -83,13 +83,13 @@ export function RentModal() {
         )}
       >
         {/* Accent header bar */}
-        <div className="h-1.5 w-full bg-linear-to-r from-amber-dark via-amber to-amber-light" />
+        <div className="h-1.5 w-full bg-slate-950" />
 
         <div className="p-6" ref={contentRef}>
           <DialogHeader className="mb-5">
             <div className="flex items-center gap-3">
               <span className="w-10 h-10 rounded-xl bg-amber/15 flex items-center justify-center">
-                <ShoppingBag className="w-5 h-5 text-amber-dark" />
+                <ShoppingBag className="w-5 h-5 text-slate-950" />
               </span>
               <div>
                 <DialogTitle className="font-display text-xl text-ink leading-tight">
@@ -144,9 +144,9 @@ export function RentModal() {
           {/* Rental period note */}
           <div
             data-row
-            className="flex items-center gap-2.5 p-3 rounded-xl bg-amber/8 border border-amber/20 mb-5"
+            className="flex items-center gap-2.5 p-3 rounded-xl bg-white/8 border border-slate/20 mb-5"
           >
-            <CalendarDays className="w-4 h-4 text-amber-dark shrink-0" />
+            <CalendarDays className="w-4 h-4 text-slate-950 shrink-0" />
             <p className="font-body text-[11.5px] text-ink-soft">
               Minimum rental period <strong className="text-ink">1 week</strong>
               . Free pickup &amp; delivery included.
@@ -168,7 +168,7 @@ export function RentModal() {
               onClick={handleConfirm}
               className={cn(
                 "flex items-center gap-2 px-5 py-3 rounded-xl",
-                "bg-amber hover:bg-amber-dark text-ink font-body text-[13px] font-semibold",
+                "bg-white hover:bg-slate-950 text-ink hover:text-white font-body text-[13px] font-semibold",
                 "transition-all duration-200 hover:scale-[1.03] active:scale-[0.97]",
                 "shadow-md hover:shadow-lg",
               )}

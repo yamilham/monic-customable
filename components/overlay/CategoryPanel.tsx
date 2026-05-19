@@ -80,9 +80,9 @@ export function CategoryPanel() {
                   "flex-1 flex flex-col items-center gap-0.5 py-2.5 px-1 rounded-none",
                   "font-body text-[10px] font-medium tracking-wide text-ink-muted",
                   "border-b-2 border-transparent transition-all duration-200",
-                  "data-[state=active]:border-amber data-[state=active]:text-ink",
-                  "data-[state=active]:bg-amber/5 data-[state=active]:shadow-none",
-                  "hover:text-ink hover:bg-black/[0.03]",
+                  "data-[state=active]:border-slate data-[state=active]:text-ink",
+                  "data-[state=active]:bg-slate/5 data-[state=active]:shadow-none",
+                  "hover:text-ink hover:bg-black/3",
                 )}
               >
                 <span className="text-base leading-none">{tab.emoji}</span>

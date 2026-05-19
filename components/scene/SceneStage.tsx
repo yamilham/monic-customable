@@ -7,11 +7,11 @@
 // This component lives inside the R3F Canvas / Suspense boundary.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { Floor } from "@/components/scene/Floor";
-import { LightingRig } from "@/components/scene/LightingRig";
-import { DeskObject } from "@/components/scene/DeskObject";
-// import { ChairObject } from "@/components/scene/ChairObject";
-// import { AccessoryObject } from "@/components/scene/AccessoryObject";
+import { Floor } from "./Floor";
+import { LightingRig } from "./LightingRig";
+import { DeskObject } from "./DeskObject";
+import { ChairObject } from "./ChairObject";
+import { AccessoryObject } from "./AccessoryObject";
 
 export function SceneStage() {
   return (
@@ -22,8 +22,8 @@ export function SceneStage() {
 
       {/* Furniture — all placed in world space */}
       <DeskObject />
-      {/* <ChairObject /> */}
-      {/* <AccessoryObject /> */}
+      <ChairObject />
+      <AccessoryObject />
     </group>
   );
 }

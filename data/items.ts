@@ -75,7 +75,7 @@ export const DESKS: ItemConfig[] = [
       "Hand-crank pneumatic lift for silent height adjustment. No power needed — works anywhere.",
     pricePerWeek: 130_000,
     color: "#B8A98A",
-    accentColor: "#C47A10",
+    accentColor: "#030616ff",
     geometry: { width: 2.2, height: 0.08, depth: 0.9 },
     placement: { position: [0, 0.74, 0] },
     icon: "🔧",

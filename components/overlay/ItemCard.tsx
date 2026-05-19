@@ -14,7 +14,6 @@ import {
   useIsCardOpen,
   useCardItem,
   useCloseCard,
-  useOpenRentModal,
 } from "@/store/useConfigStore";
 import { gsap } from "@/lib/gsap";
 
@@ -22,7 +21,6 @@ export function ItemCard() {
   const isOpen = useIsCardOpen();
   const item = useCardItem();
   const close = useCloseCard();
-  const openRent = useOpenRentModal();
   const cardRef = useRef<HTMLDivElement>(null);
   const prevOpenRef = useRef(false);
 
@@ -87,12 +85,6 @@ export function ItemCard() {
       )}
       style={{ opacity: 0 }} // GSAP takes over
     >
-      {/* Color accent bar */}
-      <div
-        className="h-1 w-full"
-        style={{ backgroundColor: item.accentColor }}
-      />
-
       <div className="p-4">
         {/* Header row */}
         <div className="flex items-start justify-between gap-2 mb-3">
@@ -136,14 +128,8 @@ export function ItemCard() {
         <ul ref={featuresRef} className="space-y-1.5 mb-4">
           {item.features.map((feat, i) => (
             <li key={i} className="flex items-start gap-2 opacity-0">
-              <span
-                className="mt-0.5 w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center"
-                style={{ backgroundColor: item.accentColor + "28" }}
-              >
-                <span
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ backgroundColor: item.accentColor }}
-                />
+              <span className="mt-0.5 w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center bg-slate-200/75">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-950" />
               </span>
               <span className="font-body text-[11px] text-ink-soft leading-tight">
                 {feat}
@@ -152,32 +138,17 @@ export function ItemCard() {
           ))}
         </ul>
 
-        {/* Price + CTA */}
-        <div className="border-t border-black/6 pt-3 flex items-center justify-between gap-3">
-          <div>
+        {/* Price */}
+        <div className="border-t border-black/6 pt-3">
+          <div className="flex items-baseline justify-between w-full">
             <p className="font-body text-[10px] text-ink-muted uppercase tracking-wide">
               Per week
             </p>
+
             <p className="font-mono text-[17px] font-semibold text-ink leading-tight">
               {formatPrice(item.pricePerWeek)}
             </p>
           </div>
-
-          <button
-            onClick={openRent}
-            className={cn(
-              "flex items-center gap-1.5 px-4 py-2 rounded-xl",
-              "font-body text-[12px] font-semibold text-ink",
-              "transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]",
-              "shadow-sm hover:shadow-md",
-            )}
-            style={{
-              backgroundColor: item.accentColor,
-            }}
-          >
-            <Sparkles className="w-3 h-3" />
-            Rent Now
-          </button>
         </div>
       </div>
     </div>
