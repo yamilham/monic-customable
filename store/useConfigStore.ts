@@ -1,179 +1,247 @@
+"use client";
+
 // ─────────────────────────────────────────────────────────────────────────────
 // store/useConfigStore.ts
-// Global state for Monis configurator.
-// Consumed by both UI overlay components and the Three.js scene.
+// Stable Zustand store for React 19 + Next.js 16
+// Optimized for R3F / GSAP / MVP configurator architecture
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+
 import {
   type ItemCategory,
   type ItemConfig,
   ALL_ITEMS,
   DEFAULT_SELECTIONS,
-  getTotalPrice,
 } from "@/data/items";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────────────────────────────────────
 
 export type ActiveTab = ItemCategory;
 
-export interface SelectionState {
-  /** ID of currently selected desk */
+type SwapSignal = Record<ItemCategory, number>;
+
+interface ConfigState {
+  // ── Selected Items ───────────────────────────────────────────────────────
   selectedDesk: string;
-  /** ID of currently selected chair */
   selectedChair: string;
-  /** ID of currently selected accessory */
   selectedAccessory: string;
-}
 
-export interface UIState {
-  /** Which tab is open in the category panel */
+  // ── UI State ─────────────────────────────────────────────────────────────
   activeTab: ActiveTab;
-  /** Whether the item detail card is visible */
+
   isCardOpen: boolean;
-  /** The item currently shown in the detail card */
   cardItem: ItemConfig | null;
-  /** Whether the Rent confirmation modal is open */
+
   isRentModalOpen: boolean;
-  /** Whether the scene has finished initial load */
+
   isSceneReady: boolean;
-  /**
-   * Signal for the 3D scene to trigger a swap animation.
-   * Increments each time a new item is selected for a category.
-   */
-  swapSignal: Record<ItemCategory, number>;
+
+  // ── Scene Animation Signal ───────────────────────────────────────────────
+  swapSignal: SwapSignal;
 }
 
-export interface ConfigStore extends SelectionState, UIState {
-  // ── Selection actions ────────────────────────────────────────────────────
+interface ConfigActions {
+  // ── Item Selection ───────────────────────────────────────────────────────
   selectItem: (category: ItemCategory, itemId: string) => void;
 
-  // ── UI actions ───────────────────────────────────────────────────────────
+  // ── Tabs ─────────────────────────────────────────────────────────────────
   setActiveTab: (tab: ActiveTab) => void;
+
+  // ── Card ─────────────────────────────────────────────────────────────────
   openCard: (item: ItemConfig) => void;
   closeCard: () => void;
+
+  // ── Rent Modal ───────────────────────────────────────────────────────────
   openRentModal: () => void;
   closeRentModal: () => void;
-  setSceneReady: (ready: boolean) => void;
 
-  // ── Derived getters ──────────────────────────────────────────────────────
-  getSelectedItem: (category: ItemCategory) => ItemConfig | undefined;
-  getSelectedIds: () => string[];
-  getTotalWeeklyPrice: () => number;
+  // ── Scene ────────────────────────────────────────────────────────────────
+  setSceneReady: (ready: boolean) => void;
 }
 
-// ─── Store ───────────────────────────────────────────────────────────────────
+export type ConfigStore = ConfigState & ConfigActions;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Store
+// ─────────────────────────────────────────────────────────────────────────────
 
 export const useConfigStore = create<ConfigStore>()(
-  subscribeWithSelector((set, get) => ({
-    // ── Initial selection state ─────────────────────────────────────────────
+  subscribeWithSelector((set) => ({
+    // ───────────────────────────────────────────────────────────────────────
+    // Initial Selection State
+    // ───────────────────────────────────────────────────────────────────────
+
     selectedDesk: DEFAULT_SELECTIONS.desk,
     selectedChair: DEFAULT_SELECTIONS.chair,
     selectedAccessory: DEFAULT_SELECTIONS.accessory,
 
-    // ── Initial UI state ────────────────────────────────────────────────────
+    // ───────────────────────────────────────────────────────────────────────
+    // Initial UI State
+    // ───────────────────────────────────────────────────────────────────────
+
     activeTab: "desk",
+
     isCardOpen: false,
     cardItem: null,
-    isRentModalOpen: false,
-    isSceneReady: false,
-    swapSignal: { desk: 0, chair: 0, accessory: 0 },
 
-    // ── Selection actions ───────────────────────────────────────────────────
+    isRentModalOpen: false,
+
+    isSceneReady: false,
+
+    swapSignal: {
+      desk: 0,
+      chair: 0,
+      accessory: 0,
+    },
+
+    // ───────────────────────────────────────────────────────────────────────
+    // Actions
+    // ───────────────────────────────────────────────────────────────────────
+
     selectItem: (category, itemId) => {
       set((state) => {
-        const key =
+        const selectionKey =
           category === "desk"
             ? "selectedDesk"
             : category === "chair"
             ? "selectedChair"
             : "selectedAccessory";
 
-        // Don't re-trigger if already selected
-        if (state[key] === itemId) return {};
+        // Prevent unnecessary updates
+        if (state[selectionKey] === itemId) {
+          return state;
+        }
 
         const item = ALL_ITEMS.find((i) => i.id === itemId);
 
         return {
-          [key]: itemId,
-          // Bump swap signal so scene can react
+          [selectionKey]: itemId,
+
+          // Trigger scene swap animation
           swapSignal: {
             ...state.swapSignal,
             [category]: state.swapSignal[category] + 1,
           },
-          // Auto-open card when item is selected
+
+          // Auto open detail card
           isCardOpen: true,
-          cardItem: item ?? state.cardItem,
+
+          // Update card item
+          cardItem: item ?? null,
         };
       });
     },
 
-    // ── UI actions ──────────────────────────────────────────────────────────
-    setActiveTab: (tab) => set({ activeTab: tab }),
+    // ───────────────────────────────────────────────────────────────────────
+    // UI Actions
+    // ───────────────────────────────────────────────────────────────────────
 
-    openCard: (item) => set({ isCardOpen: true, cardItem: item }),
-
-    closeCard: () => set({ isCardOpen: false }),
-
-    openRentModal: () => set({ isRentModalOpen: true }),
-
-    closeRentModal: () => set({ isRentModalOpen: false }),
-
-    setSceneReady: (ready) => set({ isSceneReady: ready }),
-
-    // ── Derived getters ─────────────────────────────────────────────────────
-    getSelectedItem: (category) => {
-      const state = get();
-      const id =
-        category === "desk"
-          ? state.selectedDesk
-          : category === "chair"
-          ? state.selectedChair
-          : state.selectedAccessory;
-      return ALL_ITEMS.find((i) => i.id === id);
+    setActiveTab: (tab) => {
+      set({
+        activeTab: tab,
+      });
     },
 
-    getSelectedIds: () => {
-      const { selectedDesk, selectedChair, selectedAccessory } = get();
-      return [selectedDesk, selectedChair, selectedAccessory];
+    openCard: (item) => {
+      set({
+        isCardOpen: true,
+        cardItem: item,
+      });
     },
 
-    getTotalWeeklyPrice: () => {
-      return getTotalPrice(get().getSelectedIds());
+    closeCard: () => {
+      set({
+        isCardOpen: false,
+      });
+    },
+
+    openRentModal: () => {
+      set({
+        isRentModalOpen: true,
+      });
+    },
+
+    closeRentModal: () => {
+      set({
+        isRentModalOpen: false,
+      });
+    },
+
+    setSceneReady: (ready) => {
+      set({
+        isSceneReady: ready,
+      });
     },
   }))
 );
 
-// ─── Convenience selector hooks ───────────────────────────────────────────────
-// These narrow the subscription to prevent unnecessary re-renders.
+// ─────────────────────────────────────────────────────────────────────────────
+// Primitive Selectors (React 19 Safe)
+// NEVER return objects or arrays here
+// ─────────────────────────────────────────────────────────────────────────────
 
-export const useSelectedItem = (category: ItemCategory) =>
-  useConfigStore((s) => s.getSelectedItem(category));
+// ── Selected Items ──────────────────────────────────────────────────────────
 
-export const useActiveTab = () => useConfigStore((s) => s.activeTab);
+export const useSelectedDesk = () =>
+  useConfigStore((s) => s.selectedDesk);
 
-export const useCardState = () =>
-  useConfigStore((s) => ({
-    isOpen: s.isCardOpen,
-    item: s.cardItem,
-    close: s.closeCard,
-    openRent: s.openRentModal,
-  }));
+export const useSelectedChair = () =>
+  useConfigStore((s) => s.selectedChair);
 
-export const useRentModal = () =>
-  useConfigStore((s) => ({
-    isOpen: s.isRentModalOpen,
-    close: s.closeRentModal,
-    totalPrice: s.getTotalWeeklyPrice(),
-    selectedIds: s.getSelectedIds(),
-  }));
+export const useSelectedAccessory = () =>
+  useConfigStore((s) => s.selectedAccessory);
+
+// ── Active Tab ──────────────────────────────────────────────────────────────
+
+export const useActiveTab = () =>
+  useConfigStore((s) => s.activeTab);
+
+// ── Card State ──────────────────────────────────────────────────────────────
+
+export const useIsCardOpen = () =>
+  useConfigStore((s) => s.isCardOpen);
+
+export const useCardItem = () =>
+  useConfigStore((s) => s.cardItem);
+
+// ── Rent Modal ──────────────────────────────────────────────────────────────
+
+export const useIsRentModalOpen = () =>
+  useConfigStore((s) => s.isRentModalOpen);
+
+// ── Scene ───────────────────────────────────────────────────────────────────
+
+export const useSceneReady = () =>
+  useConfigStore((s) => s.isSceneReady);
+
+// ── Actions ────────────────────────────────────────────────────────────────
+
+export const useSelectItem = () =>
+  useConfigStore((s) => s.selectItem);
+
+export const useSetActiveTab = () =>
+  useConfigStore((s) => s.setActiveTab);
+
+export const useOpenCard = () =>
+  useConfigStore((s) => s.openCard);
+
+export const useCloseCard = () =>
+  useConfigStore((s) => s.closeCard);
+
+export const useOpenRentModal = () =>
+  useConfigStore((s) => s.openRentModal);
+
+export const useCloseRentModal = () =>
+  useConfigStore((s) => s.closeRentModal);
+
+export const useSetSceneReady = () =>
+  useConfigStore((s) => s.setSceneReady);
+
+// ── Swap Signal ─────────────────────────────────────────────────────────────
 
 export const useSwapSignal = (category: ItemCategory) =>
   useConfigStore((s) => s.swapSignal[category]);
-
-export const useSceneReady = () =>
-  useConfigStore((s) => ({
-    isReady: s.isSceneReady,
-    setReady: s.setSceneReady,
-  }));

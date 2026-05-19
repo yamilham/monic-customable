@@ -1,6 +1,5 @@
 "use client";
 
-// components/overlay/CategoryPanel.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Left-side overlay panel with Desk / Chair / Accessories tabs.
 // Each tab shows a grid of selectable ItemTile components.

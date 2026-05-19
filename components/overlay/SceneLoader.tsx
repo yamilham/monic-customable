@@ -1,6 +1,5 @@
 "use client";
 
-// components/overlay/SceneLoader.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Full-screen loading overlay shown while the 3D scene initialises.
 // Fades out once the scene signals it's ready via the Zustand store.
@@ -9,6 +8,7 @@
 import { useEffect, useRef } from "react";
 import { useSceneReady } from "@/store/useConfigStore";
 import { gsap } from "@/lib/gsap";
+// import { useGSAP } from "@gsap/react";
 
 export function SceneLoader() {
   const { isReady } = useSceneReady();
@@ -37,16 +37,18 @@ export function SceneLoader() {
       {/* Animated logo mark */}
       <div className="relative">
         <div className="w-16 h-16 rounded-2xl bg-ink flex items-center justify-center shadow-float">
-          <span className="font-display text-3xl text-amber leading-none">
-            M
+          <span className="font-display font-extrabold text-3xl text-amber leading-none">
+            m
           </span>
         </div>
         {/* Spinning ring */}
-        <div className="absolute inset-0 rounded-2xl border-2 border-amber/30 animate-spin [animation-duration:2s]" />
+        {/* <div className="absolute inset-0 rounded-2xl border-2 border-amber/30 animate-spin animation-duration-[4s]" /> */}
       </div>
 
       <div className="flex flex-col items-center gap-1">
-        <p className="font-display text-xl text-ink">Monis</p>
+        <p className="font-display tracking-tighter text-[32px] font-extrabold text-ink">
+          monis
+        </p>
         <p className="font-body text-[11px] text-ink-muted tracking-widest uppercase">
           Loading workspace…
         </p>

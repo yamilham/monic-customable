@@ -1,57 +1,105 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap");
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    /* Monis design tokens */
-    --font-display: "DM Serif Display";
-    --font-body: "DM Sans";
-    --font-mono: "DM Mono";
+@theme {
+  --font-display: "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "DM Mono", monospace;
 
-    --radius: 0.75rem;
+  --radius-sm: calc(0.75rem - 4px);
+  --radius-md: calc(0.75rem - 2px);
+  --radius-lg: 0.75rem;
 
-    /* shadcn/ui CSS vars — mapped to Monis palette */
-    --background: 45 33% 94%; /* canvas #F5F0E8 */
-    --foreground: 30 8% 11%; /* ink #1C1A17   */
+  /* Monis palette */
+  --color-canvas: #f5f0e8;
+  --color-canvas-dark: #ede8dc;
 
-    --card: 0 0% 100%;
-    --card-foreground: 30 8% 11%;
+  --color-ink: #1c1a17;
+  --color-ink-soft: #3d3a35;
+  --color-ink-muted: #7a7570;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 30 8% 11%;
+  --color-amber: #e8a020;
+  --color-amber-light: #f5c050;
+  --color-amber-dark: #c47a10;
 
-    --primary: 38 82% 52%; /* amber #E8A020 */
-    --primary-foreground: 30 8% 11%;
+  --color-surface: #ffffff;
+  --color-surface-raised: #faf8f4;
 
-    --secondary: 42 20% 90%;
-    --secondary-foreground: 30 8% 11%;
+  /* shadcn/ui CSS vars */
+  --color-background: oklch(94% 0.02 80);
+  --color-foreground: oklch(11% 0.01 60);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(11% 0.01 60);
+  --color-primary: oklch(68% 0.14 70);
+  --color-primary-foreground: oklch(11% 0.01 60);
+  --color-secondary: oklch(90% 0.02 80);
+  --color-secondary-foreground: oklch(11% 0.01 60);
+  --color-muted: oklch(88% 0.01 80);
+  --color-muted-foreground: oklch(47% 0.01 60);
+  --color-accent: oklch(68% 0.14 70);
+  --color-accent-foreground: oklch(11% 0.01 60);
+  --color-destructive: oklch(51% 0.2 25);
+  --color-border: oklch(85% 0.01 80);
+  --color-input: oklch(85% 0.01 80);
+  --color-ring: oklch(68% 0.14 70);
 
-    --muted: 40 15% 88%;
-    --muted-foreground: 30 8% 47%; /* ink-muted */
+  /* Shadows */
+  --shadow-card:
+    0 2px 8px rgba(28, 26, 23, 0.08), 0 0 0 1px rgba(28, 26, 23, 0.06);
+  --shadow-card-hover:
+    0 8px 24px rgba(28, 26, 23, 0.12), 0 0 0 1px rgba(28, 26, 23, 0.08);
+  --shadow-panel:
+    0 4px 32px rgba(28, 26, 23, 0.14), 0 0 0 1px rgba(28, 26, 23, 0.06);
+  --shadow-float: 0 16px 48px rgba(28, 26, 23, 0.18);
 
-    --accent: 38 82% 52%;
-    --accent-foreground: 30 8% 11%;
+  /* Keyframes */
+  --animate-fade-up: fadeUp 0.4s ease-out both;
+  --animate-fade-in: fadeIn 0.3s ease-out both;
+  --animate-scale-in: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 38 15% 85%;
-    --input: 38 15% 85%;
-    --ring: 38 82% 52%;
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--color-border);
+    box-sizing: border-box;
   }
 
   html,
   body {
-    @apply bg-canvas text-ink font-body antialiased;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
     overflow: hidden;
     height: 100%;
     width: 100%;
@@ -66,10 +114,9 @@
 
 @layer utilities {
   .font-display {
-    font-family: var(--font-display), serif;
+    font-family: var(--font-display);
   }
 
-  /* Grain texture overlay */
   .grain-overlay::after {
     content: "";
     position: absolute;
@@ -79,7 +126,6 @@
     border-radius: inherit;
   }
 
-  /* Glass panel style used in overlay cards */
   .glass-panel {
     background: rgba(255, 252, 245, 0.82);
     backdrop-filter: blur(16px) saturate(1.4);
@@ -87,7 +133,6 @@
     border: 1px solid rgba(255, 255, 255, 0.6);
   }
 
-  /* Subtle scrollbar for item lists */
   .scroll-thin::-webkit-scrollbar {
     width: 4px;
   }

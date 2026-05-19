@@ -1,6 +1,5 @@
 "use client";
 
-// components/overlay/ItemCard.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Floating card that appears (bottom-right) when an item is selected.
 // Shows item name, tagline, features list, price, and the Rent Now CTA.
@@ -11,11 +10,19 @@ import { useEffect, useRef } from "react";
 import { X, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/data/items";
-import { useCardState, useConfigStore } from "@/store/useConfigStore";
+import {
+  useIsCardOpen,
+  useCardItem,
+  useCloseCard,
+  useOpenRentModal,
+} from "@/store/useConfigStore";
 import { gsap } from "@/lib/gsap";
 
 export function ItemCard() {
-  const { isOpen, item, close, openRent } = useCardState();
+  const isOpen = useIsCardOpen();
+  const item = useCardItem();
+  const close = useCloseCard();
+  const openRent = useOpenRentModal();
   const cardRef = useRef<HTMLDivElement>(null);
   const prevOpenRef = useRef(false);
 
@@ -92,7 +99,7 @@ export function ItemCard() {
           <div className="flex items-center gap-2.5">
             {/* Icon swatch */}
             <span
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0 shadow-sm"
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0 shadow-sm"
               style={{
                 backgroundColor: item.color + "22",
                 border: `1.5px solid ${item.color}44`,
@@ -113,7 +120,7 @@ export function ItemCard() {
           {/* Close button */}
           <button
             onClick={close}
-            className="flex-shrink-0 w-6 h-6 rounded-full bg-black/[0.06] hover:bg-black/10 flex items-center justify-center transition-colors mt-0.5"
+            className="shrink-0 w-6 h-6 rounded-full bg-black/6 hover:bg-black/10 flex items-center justify-center transition-colors mt-0.5"
             aria-label="Close item card"
           >
             <X className="w-3 h-3 text-ink-muted" />
@@ -130,7 +137,7 @@ export function ItemCard() {
           {item.features.map((feat, i) => (
             <li key={i} className="flex items-start gap-2 opacity-0">
               <span
-                className="mt-0.5 w-3.5 h-3.5 rounded-full flex-shrink-0 flex items-center justify-center"
+                className="mt-0.5 w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center"
                 style={{ backgroundColor: item.accentColor + "28" }}
               >
                 <span
@@ -146,7 +153,7 @@ export function ItemCard() {
         </ul>
 
         {/* Price + CTA */}
-        <div className="border-t border-black/[0.06] pt-3 flex items-center justify-between gap-3">
+        <div className="border-t border-black/6 pt-3 flex items-center justify-between gap-3">
           <div>
             <p className="font-body text-[10px] text-ink-muted uppercase tracking-wide">
               Per week

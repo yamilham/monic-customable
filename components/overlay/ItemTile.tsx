@@ -1,6 +1,5 @@
 "use client";
 
-// components/overlay/ItemTile.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // A single selectable item row inside the CategoryPanel grid.
 // Shows icon, name, price, and a selected indicator.
@@ -35,14 +34,14 @@ export function ItemTile({ item, isSelected, onSelect }: ItemTileProps) {
         // Selected state
         isSelected && [
           "bg-white/90 border-amber/40 shadow-card",
-          "before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px]",
+          "before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.75",
           "before:bg-amber before:rounded-l-xl",
         ],
       )}
     >
       {/* Color swatch */}
       <span
-        className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-sm shadow-sm"
+        className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-sm shadow-sm"
         style={{
           backgroundColor: item.color + "22",
           border: `1.5px solid ${item.color}44`,
@@ -75,7 +74,7 @@ export function ItemTile({ item, isSelected, onSelect }: ItemTileProps) {
 
       {/* Selected checkmark */}
       {isSelected && (
-        <span className="flex-shrink-0 w-4 h-4 rounded-full bg-amber flex items-center justify-center">
+        <span className="shrink-0 w-4 h-4 rounded-full bg-amber flex items-center justify-center">
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden>
             <path
               d="M1.5 4L3.2 5.7L6.5 2.5"

@@ -12,7 +12,7 @@ import {
   ItemCard,
   RentModal,
   SummaryBar,
-  SceneLoader,
+  // SceneLoader,
 } from "@/components/overlay/Index";
 
 export default function HomePage() {
@@ -20,7 +20,7 @@ export default function HomePage() {
     // Root: full-screen, relative for absolute overlay children
     <main className="relative w-screen h-screen overflow-hidden bg-canvas">
       {/* ── Loading overlay (hides until scene is ready) ── */}
-      <SceneLoader />
+      {/* <SceneLoader /> */}
 
       {/* ── 3D Scene Canvas (Phase 3 — placeholder for now) ── */}
       <div className="absolute inset-0 z-0">
@@ -28,7 +28,7 @@ export default function HomePage() {
           SceneCanvas will be inserted here in Phase 3.
           For Phase 2 verification, a warm gradient stands in.
         */}
-        <div className="w-full h-full bg-gradient-to-b from-[#F0EAD6] via-[#E8DFC8] to-[#DDD3B5] flex items-center justify-center">
+        <div className="w-full h-full bg-linear-to-b from-[#F0EAD6] via-[#E8DFC8] to-[#DDD3B5] flex items-center justify-center">
           <div className="text-center select-none pointer-events-none">
             <p className="font-display text-6xl text-ink/10">3D</p>
             <p className="font-body text-sm text-ink/20 mt-2 tracking-widest uppercase">

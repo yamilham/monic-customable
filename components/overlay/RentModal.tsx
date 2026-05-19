@@ -1,13 +1,12 @@
 "use client";
 
-// components/overlay/RentModal.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Confirmation modal that shows the full order summary (desk + chair + accessory)
 // with total weekly price and a final "Confirm Rental" CTA.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useRef } from "react";
-import { CheckCircle2, X, ShoppingBag, CalendarDays } from "lucide-react";
+import { useEffect, useRef, useMemo } from "react";
+import { CheckCircle2, ShoppingBag, CalendarDays } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -15,19 +14,40 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useRentModal, useConfigStore } from "@/store/useConfigStore";
-import { ALL_ITEMS, formatPrice } from "@/data/items";
+import {
+  useIsRentModalOpen,
+  useCloseRentModal,
+  useSelectedDesk,
+  useSelectedChair,
+  useSelectedAccessory,
+} from "@/store/useConfigStore";
+import { ALL_ITEMS, getTotalPrice, formatPrice } from "@/data/items";
 import { cn } from "@/lib/utils";
 import { gsap } from "@/lib/gsap";
 
 export function RentModal() {
-  const { isOpen, close, totalPrice, selectedIds } = useRentModal();
+  const isOpen = useIsRentModalOpen();
+  const close = useCloseRentModal();
+
+  const selectedDesk = useSelectedDesk();
+  const selectedChair = useSelectedChair();
+  const selectedAccessory = useSelectedAccessory();
   const confirmedRef = useRef(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const selectedItems = selectedIds
-    .map((id) => ALL_ITEMS.find((i) => i.id === id))
-    .filter(Boolean);
+  const selectedIds = useMemo(() => {
+    return [selectedDesk, selectedChair, selectedAccessory];
+  }, [selectedDesk, selectedChair, selectedAccessory]);
+
+  const totalPrice = useMemo(() => {
+    return getTotalPrice(selectedIds);
+  }, [selectedIds]);
+
+  const selectedItems = useMemo(() => {
+    return selectedIds
+      .map((id) => ALL_ITEMS.find((i) => i.id === id))
+      .filter(Boolean);
+  }, [selectedIds]);
 
   // Stagger order rows on open
   useEffect(() => {
@@ -63,7 +83,7 @@ export function RentModal() {
         )}
       >
         {/* Accent header bar */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-amber-dark via-amber to-amber-light" />
+        <div className="h-1.5 w-full bg-linear-to-r from-amber-dark via-amber to-amber-light" />
 
         <div className="p-6" ref={contentRef}>
           <DialogHeader className="mb-5">
@@ -93,7 +113,7 @@ export function RentModal() {
                 >
                   {/* Swatch */}
                   <span
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0"
                     style={{
                       backgroundColor: item.color + "22",
                       border: `1.5px solid ${item.color}44`,
@@ -113,7 +133,7 @@ export function RentModal() {
                   </div>
 
                   {/* Price */}
-                  <span className="font-mono text-[12px] font-semibold text-ink flex-shrink-0">
+                  <span className="font-mono text-[12px] font-semibold text-ink shrink-0">
                     {formatPrice(item.pricePerWeek)}
                   </span>
                 </div>
@@ -126,7 +146,7 @@ export function RentModal() {
             data-row
             className="flex items-center gap-2.5 p-3 rounded-xl bg-amber/8 border border-amber/20 mb-5"
           >
-            <CalendarDays className="w-4 h-4 text-amber-dark flex-shrink-0" />
+            <CalendarDays className="w-4 h-4 text-amber-dark shrink-0" />
             <p className="font-body text-[11.5px] text-ink-soft">
               Minimum rental period <strong className="text-ink">1 week</strong>
               . Free pickup &amp; delivery included.

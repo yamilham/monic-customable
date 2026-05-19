@@ -1,32 +1,50 @@
 "use client";
 
-// components/overlay/SummaryBar.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Floating bottom-center bar showing all 3 current selections + total price.
 // Matches the sketch's "Ready to Rent?" zone.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { ShoppingCart } from "lucide-react";
-import { useConfigStore } from "@/store/useConfigStore";
+import {
+  useSelectedDesk,
+  useSelectedChair,
+  useSelectedAccessory,
+  useOpenRentModal,
+} from "@/store/useConfigStore";
 import { ALL_ITEMS, formatPrice } from "@/data/items";
 import { cn } from "@/lib/utils";
 import { gsap } from "@/lib/gsap";
 
 export function SummaryBar() {
   const barRef = useRef<HTMLDivElement>(null);
-  const {
-    selectedDesk,
-    selectedChair,
-    selectedAccessory,
-    getTotalWeeklyPrice,
-    openRentModal,
-  } = useConfigStore();
+  const selectedDesk = useSelectedDesk();
+  const selectedChair = useSelectedChair();
+  const selectedAccessory = useSelectedAccessory();
 
-  const desk = ALL_ITEMS.find((i) => i.id === selectedDesk);
-  const chair = ALL_ITEMS.find((i) => i.id === selectedChair);
-  const acc = ALL_ITEMS.find((i) => i.id === selectedAccessory);
-  const total = getTotalWeeklyPrice();
+  const openRentModal = useOpenRentModal();
+
+  const desk = useMemo(() => {
+    return ALL_ITEMS.find((i) => i.id === selectedDesk);
+  }, [selectedDesk]);
+
+  const chair = useMemo(() => {
+    return ALL_ITEMS.find((i) => i.id === selectedChair);
+  }, [selectedChair]);
+
+  const acc = useMemo(() => {
+    return ALL_ITEMS.find((i) => i.id === selectedAccessory);
+  }, [selectedAccessory]);
+
+  const total = useMemo(() => {
+    const ids = [selectedDesk, selectedChair, selectedAccessory];
+
+    return ids.reduce((sum, id) => {
+      const item = ALL_ITEMS.find((i) => i.id === id);
+      return sum + (item?.pricePerWeek ?? 0);
+    }, 0);
+  }, [selectedDesk, selectedChair, selectedAccessory]);
 
   // Slide up on mount
   useEffect(() => {
@@ -53,7 +71,7 @@ export function SummaryBar() {
                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/60 border border-white/70"
               >
                 <span className="text-sm leading-none">{item.icon}</span>
-                <span className="font-body text-[11px] text-ink-soft font-medium max-w-[80px] truncate hidden sm:block">
+                <span className="font-body text-[11px] text-ink-soft font-medium max-w-20 truncate hidden sm:block">
                   {item.name.split(" ").slice(0, 2).join(" ")}
                 </span>
               </div>
