@@ -1,58 +1,38 @@
 "use client";
 
-// app/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Phase 2: Full layout shell.
-// The 3D canvas will be inserted in Phase 3 where the placeholder sits.
-// ─────────────────────────────────────────────────────────────────────────────
-
+// app/page.tsx — Phase 3: 3D canvas wired in
+import dynamic from "next/dynamic";
 import {
   Header,
   CategoryPanel,
   ItemCard,
   RentModal,
   SummaryBar,
-  // SceneLoader,
+  SceneLoader,
 } from "@/components/overlay/Index";
+
+// Dynamic import — Three.js must never run on the server
+const SceneCanvas = dynamic(
+  () => import("@/components/scene/SceneCanvas").then((m) => m.SceneCanvas),
+  { ssr: false },
+);
 
 export default function HomePage() {
   return (
-    // Root: full-screen, relative for absolute overlay children
     <main className="relative w-screen h-screen overflow-hidden bg-canvas">
-      {/* ── Loading overlay (hides until scene is ready) ── */}
-      {/* <SceneLoader /> */}
+      {/* Loading overlay — fades out once scene signals ready */}
+      <SceneLoader />
 
-      {/* ── 3D Scene Canvas (Phase 3 — placeholder for now) ── */}
+      {/* 3D Canvas — fills entire background */}
       <div className="absolute inset-0 z-0">
-        {/*
-          SceneCanvas will be inserted here in Phase 3.
-          For Phase 2 verification, a warm gradient stands in.
-        */}
-        <div className="w-full h-full bg-linear-to-b from-[#F0EAD6] via-[#E8DFC8] to-[#DDD3B5] flex items-center justify-center">
-          <div className="text-center select-none pointer-events-none">
-            <p className="font-display text-6xl text-ink/10">3D</p>
-            <p className="font-body text-sm text-ink/20 mt-2 tracking-widest uppercase">
-              Scene Canvas — Phase 3
-            </p>
-          </div>
-        </div>
+        <SceneCanvas />
       </div>
 
-      {/* ── UI Overlay Layer (z-20, pointer-events managed per component) ── */}
-
-      {/* Top-center: Headline */}
+      {/* UI Overlay layer */}
       <Header />
-
-      {/* Left-center: Category tabs + item grid */}
       <CategoryPanel />
-
-      {/* Bottom-right: Selected item detail card */}
       <ItemCard />
-
-      {/* Bottom-center: Summary bar + rent CTA */}
       <SummaryBar />
-
-      {/* Modal: Rent confirmation dialog */}
       <RentModal />
     </main>
   );

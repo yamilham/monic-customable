@@ -82,7 +82,7 @@ export function CategoryPanel() {
                   "border-b-2 border-transparent transition-all duration-200",
                   "data-[state=active]:border-amber data-[state=active]:text-ink",
                   "data-[state=active]:bg-amber/5 data-[state=active]:shadow-none",
-                  "hover:text-ink hover:bg-black/[0.03]",
+                  "hover:text-ink hover:bg-black/3",
                 )}
               >
                 <span className="text-base leading-none">{tab.emoji}</span>

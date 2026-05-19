@@ -63,12 +63,12 @@ export function ItemTile({ item, isSelected, onSelect }: ItemTileProps) {
         </span>
         <span
           className={cn(
-            "block font-mono text-[10px] mt-0.5",
-            isSelected ? "text-amber font-semibold" : "text-ink-muted",
+            "block font-mono text-[14px] mt-0.5",
+            isSelected ? "text-ink font-semibold" : "text-ink-muted",
           )}
         >
           {formatPrice(item.pricePerWeek)}
-          <span className="font-normal opacity-60">/wk</span>
+          <span className="font-normal opacity-60">/week</span>
         </span>
       </span>
 

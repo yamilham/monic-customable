@@ -16,13 +16,11 @@ export function LightingRig() {
       {/* ── Ambient base ── */}
       <ambientLight
         intensity={0.35}
-        color="#FFF5E0"   // warm white
+        color="#FFF5E0" // warm white
       />
 
       {/* ── Hemisphere — sky warm, ground cool ── */}
-      <hemisphereLight
-        args={["#FFE8B0", "#C8B89A", 0.45]}
-      />
+      <hemisphereLight args={["#FFE8B0", "#C8B89A", 0.45]} />
 
       {/* ── Key light — warm, upper-right, shadow-casting ── */}
       <directionalLight

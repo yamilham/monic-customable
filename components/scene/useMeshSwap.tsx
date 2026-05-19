@@ -21,7 +21,7 @@ interface UseMeshSwapOptions {
 
 export function useMeshSwap(
   groupRef: React.RefObject<Group | null>,
-  { category, onSwap }: UseMeshSwapOptions,
+  { category, onSwap }: UseMeshSwapOptions
 ) {
   const swapSignal = useSwapSignal(category);
   const isFirstRender = useRef(true);

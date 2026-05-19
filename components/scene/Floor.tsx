@@ -41,7 +41,7 @@ export function Floor() {
         position={[0, -0.001, 0.6]}
         rotation={[-Math.PI / 2, 0, 0]}
       >
-        <ellipseGeometry args={[2.2, 1.4, 48]} />
+        <circleGeometry args={[2.2, 1.4, 48]} />
         <meshBasicMaterial
           color="#8B7355"
           transparent
